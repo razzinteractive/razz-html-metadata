@@ -6,7 +6,7 @@
 
 var cheerio = require('cheerio');
 var meta = require('../index');
-var preq = require('preq'); // Promisified Request library
+var axios = require('axios');
 var assert = require('./utils/assert.js');
 var fs = require('fs');
 
@@ -21,9 +21,9 @@ describe('errors', function() {
 
 	it('should not find schema.org metadata, reject promise', function() {
 		var url = 'http://example.com';
-		return preq.get(url)
+		return axios.get(url)
 		.then(function(callRes) {
-			var $ = cheerio.load(callRes.body);
+			var $ = cheerio.load(callRes.data);
 			var prom = meta.parseSchemaOrgMicrodata($);
 			return assert.fails(prom);
 		});
@@ -31,9 +31,9 @@ describe('errors', function() {
 
 	it('should not find BE Press metadata, reject promise', function() {
 		var url = 'http://example.com';
-		return preq.get(url)
+		return axios.get(url)
 		.then(function(callRes) {
-			var $ = cheerio.load(callRes.body);
+			var $ = cheerio.load(callRes.data);
 			var prom = meta.parseBEPress($);
 			return assert.fails(prom);
 		});
@@ -41,9 +41,9 @@ describe('errors', function() {
 
 	it('should not find coins metadata, reject promise', function() {
 		var url = 'http://example.com';
-		return preq.get(url)
+		return axios.get(url)
 		.then(function(callRes) {
-			var $ = cheerio.load(callRes.body);
+			var $ = cheerio.load(callRes.data);
 			var prom = meta.parseCOinS($);
 			return assert.fails(prom);
 		});
@@ -51,9 +51,9 @@ describe('errors', function() {
 
 	it('should not find dublin core metadata, reject promise', function() {
 		var url = 'http://www.laprovence.com/article/actualites/3411272/marseille-un-proche-du-milieu-corse-abattu-par-balles-en-plein-jour.html';
-		return preq.get(url)
+		return axios.get(url)
 		.then(function(callRes) {
-			var $ = cheerio.load(callRes.body);
+			var $ = cheerio.load(callRes.data);
 			var prom = meta.parseDublinCore($);
 			return assert.fails(prom);
 		});
@@ -61,9 +61,9 @@ describe('errors', function() {
 
 	it('should not find highwire press metadata, reject promise', function() {
 		var url = 'http://example.com';
-		return preq.get(url)
+		return axios.get(url)
 		.then(function(callRes) {
-			var $ = cheerio.load(callRes.body);
+			var $ = cheerio.load(callRes.data);
 			var prom = meta.parseHighwirePress($);
 			return assert.fails(prom);
 		});
@@ -71,9 +71,9 @@ describe('errors', function() {
 
 	it('should not find open graph metadata, reject promise', function() {
 		var url = 'http://www.example.com';
-		return preq.get(url)
+		return axios.get(url)
 		.then(function(callRes) {
-			var $ = cheerio.load(callRes.body);
+			var $ = cheerio.load(callRes.data);
 			var prom = meta.parseOpenGraph($);
 			return assert.fails(prom);
 		});
@@ -81,9 +81,9 @@ describe('errors', function() {
 
 	it('should not find eprints metadata, reject promise', function() {
 		var url = 'http://example.com';
-		return preq.get(url)
+		return axios.get(url)
 		.then(function(callRes) {
-			var $ = cheerio.load(callRes.body);
+			var $ = cheerio.load(callRes.data);
 			var prom = meta.parseEprints($);
 			return assert.fails(prom);
 		});
@@ -91,9 +91,9 @@ describe('errors', function() {
 
 	it('should not find twitter metadata, reject promise', function() {
 		var url = 'http://example.com';
-		return preq.get(url)
+		return axios.get(url)
 		.then(function(callRes) {
-			var $ = cheerio.load(callRes.body);
+			var $ = cheerio.load(callRes.data);
 			var prom = meta.parseTwitter($);
 			return assert.fails(prom);
 		});
@@ -101,9 +101,9 @@ describe('errors', function() {
 
 	it('should not find JSON-LD, reject promise', function() {
 		var url = 'http://example.com';
-		return preq.get(url)
+		return axios.get(url)
 		.then(function(callRes) {
-			var $ = cheerio.load(callRes.body);
+			var $ = cheerio.load(callRes.data);
 			var prom = meta.parseJsonLd($);
 			return assert.fails(prom);
 		});

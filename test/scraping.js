@@ -7,7 +7,7 @@
 
 var meta = require('../index');
 var assert = require('./utils/assert.js');
-var preq = require('preq');
+var axios = require('axios');
 var cheerio = require('cheerio');
 
 // mocha defines to avoid JSHint breakage
@@ -45,10 +45,10 @@ describe('scraping', function() {
 	describe('parseBEPress function', function() {
 		it('should get BE Press metadata tags', function() {
 			url = 'http://biostats.bepress.com/harvardbiostat/paper154/';
-			return preq.get(url).then(function(callRes) {
+			return axios.get(url).then(function(callRes) {
 				var expectedAuthors = ['Claggett, Brian', 'Xie, Minge', 'Tian, Lu'];
 				var expectedAuthorInstitutions = ['Harvard', 'Rutgers University - New Brunswick/Piscataway', 'Stanford University School of Medicine'];
-				var chtml = cheerio.load(callRes.body);
+				var chtml = cheerio.load(callRes.data);
 
 				return meta.parseBEPress(chtml)
 				.then(function(results) {
@@ -70,8 +70,8 @@ describe('scraping', function() {
 	describe('parseCOinS function', function() {
 		it('should get COinS metadata', function() {
 			url = 'https://en.wikipedia.org/wiki/Viral_phylodynamics';
-			return preq.get(url).then(function(callRes) {
-				var chtml = cheerio.load(callRes.body);
+			return axios.get(url).then(function(callRes) {
+				var chtml = cheerio.load(callRes.data);
 				return meta.parseCOinS(chtml)
 				.then(function(results){
 					assert.deepEqual(Array.isArray(results), true, 'Expected Array, got' + typeof results);
@@ -85,8 +85,8 @@ describe('scraping', function() {
 	describe('parseEPrints function', function() {
 		it('should get EPrints metadata', function() {
 			url = 'http://eprints.gla.ac.uk/113711/';
-			return preq.get(url).then(function(callRes) {
-				var chtml = cheerio.load(callRes.body);
+			return axios.get(url).then(function(callRes) {
+				var chtml = cheerio.load(callRes.data);
 				var expectedAuthors = ['Gatherer, Derek', 'Kohl, Alain'];
 
 				return meta.parseEprints(chtml)
@@ -112,8 +112,8 @@ describe('scraping', function() {
 					'User-Agent': 'webscraper'
 				}
 			};
-			return preq.get(options).then(function(callRes) {
-				var chtml = cheerio.load(callRes.body);
+			return axios.get(options).then(function(callRes) {
+				var chtml = cheerio.load(callRes.data);
 				return meta.parseGeneral(chtml).then(function(results) {
 					assert.deepEqual(results.lang, expected);
 				});
@@ -128,8 +128,8 @@ describe('scraping', function() {
 					'User-Agent': 'webscraper'
 				}
 			};
-			return preq.get(options).then(function(callRes) {
-				var chtml = cheerio.load(callRes.body);
+			return axios.get(options).then(function(callRes) {
+				var chtml = cheerio.load(callRes.data);
 				return meta.parseGeneral(chtml).then(function(results) {
 					assert.deepEqual(results.dir, expected);
 				});
@@ -140,8 +140,8 @@ describe('scraping', function() {
 	describe('parseHighwirePress function', function() {
 		it('should get Highwire Press metadata', function() {
 			url = 'http://mic.microbiologyresearch.org/content/journal/micro/10.1099/mic.0.26954-0';
-			return preq.get(url).then(function(callRes) {
-				var chtml = cheerio.load(callRes.body);
+			return axios.get(url).then(function(callRes) {
+				var chtml = cheerio.load(callRes.data);
 				var expectedAuthors = ['Jacqueline M. Reimers', 'Karen H. Schmidt', 'Angelika Longacre', 'Dennis K. Reschke', 'Barbara E. Wright'];
 
 				return meta.parseHighwirePress(chtml)
@@ -162,8 +162,8 @@ describe('scraping', function() {
 	describe('parseOpenGraph function', function() {
 		it('from http://fortune.com', function() {
 			url = 'http://fortune.com/2015/02/20/nobel-prize-economics-for-sale/';
-			return preq.get(url).then(function(callRes) {
-				var chtml = cheerio.load(callRes.body);
+			return axios.get(url).then(function(callRes) {
+				var chtml = cheerio.load(callRes.data);
 				return meta.parseOpenGraph(chtml)
 				.catch(function(e){throw e;})
 				.then(function(res) {
@@ -178,8 +178,8 @@ describe('scraping', function() {
 
 		it('image tag urls and metadata from http://github.com', function() {
 			url = 'https://github.com';
-			return preq.get(url).then(function(callRes) {
-				var chtml = cheerio.load(callRes.body);
+			return axios.get(url).then(function(callRes) {
+				var chtml = cheerio.load(callRes.data);
 				return meta.parseOpenGraph(chtml)
 				.catch(function(e){throw e;})
 				.then(function(res) {
@@ -197,8 +197,8 @@ describe('scraping', function() {
 	describe('parseSchemaOrgMicrodata function', function() {
 		it('should get Schema.org Microdata', function() {
 			url = 'http://blog.schema.org/';
-			return preq.get(url).then(function(callRes) {
-				var chtml = cheerio.load(callRes.body);
+			return axios.get(url).then(function(callRes) {
+				var chtml = cheerio.load(callRes.data);
 				return meta.parseSchemaOrgMicrodata(chtml)
 				.then(function(res){
 					if(!res.items) {
@@ -212,8 +212,8 @@ describe('scraping', function() {
 	describe('parseTwitter function', function() {
 		it('from http://www.aftenposten.no', function() {
 			url = 'http://www.aftenposten.no/kultur/Pinlig-for-Skaber-555558b.html';
-			return preq.get(url).then(function(callRes) {
-				var chtml = cheerio.load(callRes.body);
+			return axios.get(url).then(function(callRes) {
+				var chtml = cheerio.load(callRes.data);
 				return meta.parseTwitter(chtml)
 				.catch(function(e){throw e;})
 				.then(function(res) {
@@ -242,8 +242,8 @@ describe('scraping', function() {
 		urls.forEach(function(test) {
 			describe(test, function() {
 				it('should return an object or array and get correct data', function() {
-					return preq.get(test).then(function(callRes) {
-						var chtml = cheerio.load(callRes.body);
+					return axios.get(test).then(function(callRes) {
+						var chtml = cheerio.load(callRes.data);
 						return meta.parseJsonLd(chtml)
 						.then(function(res) {
 							assert.ok(typeof res === 'object');
@@ -263,9 +263,9 @@ describe('scraping', function() {
 	describe('parsePrism function', function() {
 		it('should get PRISM metadata from http://nature.com', function() {
 			url = 'https://www.nature.com/articles/nature24679';
-			return preq.get(url).then(function(callRes) {
+			return axios.get(url).then(function(callRes) {
 				var expectedKeys = ['issn', 'publicationName', 'publicationDate', 'section', 'copyright', 'rightsAgent', 'url', 'doi'];
-				var chtml = cheerio.load(callRes.body);
+				var chtml = cheerio.load(callRes.data);
 
 				return meta.parsePrism(chtml)
 				.catch(function(e){throw e;})
@@ -282,8 +282,8 @@ describe('scraping', function() {
 
 	it('should not have any undefined values', function() {
 		url = 'https://www.cnet.com/special-reports/vr101/';
-		return preq.get(url).then(function(callRes) {
-			var chtml = cheerio.load(callRes.body);
+		return axios.get(url).then(function(callRes) {
+			var chtml = cheerio.load(callRes.data);
 			return meta.parseAll(chtml)
 			.then(function(results) {
 				Object.keys(results).forEach(function(metadataType) {

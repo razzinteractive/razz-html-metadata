@@ -12,7 +12,7 @@ Import modules
  */
 var BBPromise = require('bluebird');
 var cheerio = require('cheerio');
-var preq = require('preq'); // Promisified Request library
+var axios = require('axios');
 var fs = BBPromise.promisifyAll(require('fs'));
 
 var index = require('./lib/index.js');
@@ -27,9 +27,9 @@ var index = require('./lib/index.js');
  * @return {Object}              BBPromise for metadata
  */
 exports = module.exports = function(urlOrOpts, callback) {
-	return preq.get(urlOrOpts
+	return axios.get(urlOrOpts
 	).then(function(response) {
-		return index.parseAll(cheerio.load(response.body));
+		return index.parseAll(cheerio.load(response.data));
 	}).nodeify(callback);
 };
 
